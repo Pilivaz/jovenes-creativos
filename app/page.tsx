@@ -22,14 +22,14 @@ import Link from "next/link"
 import Image from "next/image"
 
 const profesores = [
-  { name: "Fabián Bessone", role: "Profesor de Robótica y Programación" },
-  { name: "Celeste Borrachia", role: "Profesora de Biología" },
+  { name: "Fabián Bessone", role: "Profesor de Robótica y Programación", image: "/images/persona.jpg" },
+  { name: "Celeste Borrachia", role: "Profesora de Biología", image: "/images/persona.jpg" },
 ]
 
 const coaches = [
-  { name: "Ciro Cafaratti", role: "Coach - Estudiante" },
-  { name: "Joaquín Trejo", role: "Coach - Estudiante" },
-  { name: "Pilar Vazquez Garbero", role: "Coach - Estudiante" },
+  { name: "Ciro Cafaratti", role: "Coach - Estudiante", image: "/images/ciro.jpeg" },
+  { name: "Joaquín Trejo", role: "Coach - Estudiante", image: "/images/joaquin.jpeg" },
+  { name: "Pilar Vazquez Garbero", role: "Coach - Estudiante", image: "/images/pili.jpeg" },
 ]
 
 const todosLosIntegrantes = [
@@ -254,7 +254,7 @@ export default function HomePage() {
                   <Card className="p-6 h-full hover:shadow-lg transition-all">
                     <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden">
                       <Image
-                        src="/images/persona.jpg"
+                        src={profesor.image || "/placeholder.svg"}
                         alt={profesor.name}
                         width={96}
                         height={96}
@@ -285,7 +285,7 @@ export default function HomePage() {
                   <Card className="p-6 h-full hover:shadow-lg transition-all">
                     <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden">
                       <Image
-                        src="/images/ciro.jpeg"
+                        src={coach.image || "/placeholder.svg"}
                         alt={coach.name}
                         width={96}
                         height={96}
@@ -320,7 +320,7 @@ export default function HomePage() {
               className="max-w-4xl mx-auto mb-12 rounded-2xl overflow-hidden shadow-2xl"
             >
               <Image
-                src="/images/naassom-azevedo-q-sei-tqslc-unsplash.jpg"
+                src="/images/grupo.jpeg"
                 alt="Equipo Jóvenes Creativos"
                 width={1200}
                 height={800}
