@@ -284,7 +284,7 @@ export default function ContactoPage() {
                       </svg>
                       <div>
                         <p className="font-medium">Teléfono</p>
-                        <p className="text-sm text-muted-foreground">+54 9 3468 123456</p>
+                        <p className="text-sm text-muted-foreground">+54 9 3468 52-1095</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
