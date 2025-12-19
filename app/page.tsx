@@ -285,7 +285,7 @@ export default function HomePage() {
                   <Card className="p-6 h-full hover:shadow-lg transition-all">
                     <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden">
                       <Image
-                        src="/images/ciro.jpg"
+                        src="/images/ciro.jpeg"
                         alt={coach.name}
                         width={96}
                         height={96}
