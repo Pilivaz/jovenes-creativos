@@ -86,7 +86,7 @@ const projects = [
       "Una página web educativa moderna y funcional, creada para enseñar de manera efectiva y atractiva. Ideal para instituciones, docentes o proyectos de formación, combina diseño profesional, navegación sencilla y herramientas que potencian el aprendizaje online.",
     impact: "80+ estudiantes entusiasmados",
     beneficiaries: "Una escuela mas moderna",
-    technologies: ["HTML", "Css", "WJavaScirpt"],
+    technologies: ["HTML", "Css", "JavaScirpt"],
     image: "/images/pagina.jpeg",
   },
   {
