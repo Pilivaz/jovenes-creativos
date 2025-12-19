@@ -23,6 +23,8 @@ export default function ContactoPage() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState("")
 
   useEffect(() => {
     // Scroll to top when page loads
@@ -64,19 +66,44 @@ export default function ContactoPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError("")
 
     if (validateForm()) {
-      // Simulate form submission
-      console.log("[v0] Form submitted:", formData)
-      setSubmitted(true)
-      setFormData({ nombre: "", correo: "", asunto: "", mensaje: "" })
+      setIsSubmitting(true)
 
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSubmitted(false)
-      }, 5000)
+      try {
+        const response = await fetch("/api/send-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || "Error al enviar el mensaje")
+        }
+
+        // Success
+        setSubmitted(true)
+        setFormData({ nombre: "", correo: "", asunto: "", mensaje: "" })
+
+        // Reset success message after 5 seconds
+        setTimeout(() => {
+          setSubmitted(false)
+        }, 5000)
+      } catch (error) {
+        console.error("[v0] Error submitting form:", error)
+        setSubmitError(
+          error instanceof Error ? error.message : "Error al enviar el mensaje. Por favor, intenta nuevamente.",
+        )
+      } finally {
+        setIsSubmitting(false)
+      }
     }
   }
 
@@ -184,6 +211,16 @@ export default function ContactoPage() {
                     </motion.div>
                   )}
 
+                  {submitError && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mb-6 p-4 bg-destructive/20 border border-destructive rounded-lg text-destructive"
+                    >
+                      {submitError}
+                    </motion.div>
+                  )}
+
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                       <label className="block text-sm font-medium mb-2">
@@ -243,8 +280,13 @@ export default function ContactoPage() {
                       {errors.mensaje && <p className="text-destructive text-sm mt-1">{errors.mensaje}</p>}
                     </div>
 
-                    <Button type="submit" className="w-full bg-primary hover:bg-primary/90" size="lg">
-                      Enviar mensaje
+                    <Button
+                      type="submit"
+                      className="w-full bg-primary hover:bg-primary/90"
+                      size="lg"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Enviando..." : "Enviar mensaje"}
                     </Button>
                   </form>
                 </Card>
@@ -284,7 +326,7 @@ export default function ContactoPage() {
                       </svg>
                       <div>
                         <p className="font-medium">Teléfono</p>
-                        <p className="text-sm text-muted-foreground">+54 9 3468 52-1095</p>
+                        <p className="text-sm text-muted-foreground">+54 9 3468 123456</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -308,12 +350,12 @@ export default function ContactoPage() {
                       },
                       {
                         icon: Facebook,
-                        href: "https://www.instagram.com/jovenes__creativos?igsh=MWYzejdidTJoZXhxcA==",
+                        href: "https://www.facebook.com/jovenescreativos",
                         label: "Facebook",
                       },
                       {
                         icon: Twitter,
-                        href: "https://www.instagram.com/jovenes__creativos?igsh=MWYzejdidTJoZXhxcA==",
+                        href: "https://www.twitter.com/jovenescreativos",
                         label: "Twitter",
                       },
                       { icon: Mail, href: "mailto:gdjcreativos@gmail.com", label: "Email" },
@@ -392,7 +434,7 @@ export default function ContactoPage() {
                 ].map((social, index) => (
                   <motion.a
                     key={index}
-                    href="https://www.instagram.com/jovenes__creativos?igsh=MWYzejdidTJoZXhxcA=="
+                    href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, rotate: 5 }}
