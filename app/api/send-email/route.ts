@@ -16,6 +16,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 })
     }
 
+    // Check if API key exists
+    if (!process.env.RESEND_API_KEY) {
+      console.error("[v0] RESEND_API_KEY is not configured")
+      return NextResponse.json({ error: "API key no configurada" }, { status: 500 })
+    }
+
+    console.log("[v0] Sending email with Resend API...")
+
     // Send email using Resend
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -24,7 +32,7 @@ export async function POST(request: Request) {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Jóvenes Creativos <onboarding@resend.dev>",
+        from: "onboarding@resend.dev",
         to: ["gdjcreativos@gmail.com"],
         reply_to: correo,
         subject: `Nuevo mensaje de contacto: ${asunto}`,
@@ -51,13 +59,14 @@ export async function POST(request: Request) {
       }),
     })
 
+    const data = await response.json()
+
     if (!response.ok) {
-      const errorData = await response.json()
-      console.error("[v0] Error sending email:", errorData)
-      return NextResponse.json({ error: "Error al enviar el email. Por favor, intenta nuevamente." }, { status: 500 })
+      console.error("[v0] Resend API error:", data)
+      return NextResponse.json({ error: `Error de Resend: ${data.message || "Error desconocido"}` }, { status: 500 })
     }
 
-    const data = await response.json()
+    console.log("[v0] Email sent successfully:", data.id)
     return NextResponse.json({ success: true, data })
   } catch (error) {
     console.error("[v0] Error in send-email route:", error)
